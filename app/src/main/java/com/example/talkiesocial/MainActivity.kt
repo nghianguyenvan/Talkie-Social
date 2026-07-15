@@ -12,7 +12,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.talkiesocial.core.common.navigation.HomeRoute
+import com.example.talkiesocial.core.common.navigation.LoginRoute
+import com.example.talkiesocial.core.common.navigation.RegisterRoute
 import com.example.talkiesocial.core.ui.theme.TalkieSocialTheme
+import com.example.talkiesocial.feature.auth.LoginScreen
+import com.example.talkiesocial.feature.auth.RegisterScreen
 import com.example.talkiesocial.feature.home.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,9 +31,33 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = HomeRoute,
+                        startDestination = LoginRoute,
                         modifier = Modifier.padding(innerPadding)
                     ) {
+                        composable<LoginRoute> {
+                            LoginScreen(
+                                onLoginSuccess = {
+                                    navController.navigate(HomeRoute) {
+                                        popUpTo(LoginRoute) { inclusive = true }
+                                    }
+                                },
+                                onNavigateToRegister = {
+                                    navController.navigate(RegisterRoute)
+                                }
+                            )
+                        }
+                        composable<RegisterRoute> {
+                            RegisterScreen(
+                                onRegisterSuccess = {
+                                    navController.navigate(HomeRoute) {
+                                        popUpTo(LoginRoute) { inclusive = true }
+                                    }
+                                },
+                                onNavigateToLogin = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
                         composable<HomeRoute> {
                             HomeScreen(
                                 onChatClick = { chatId ->

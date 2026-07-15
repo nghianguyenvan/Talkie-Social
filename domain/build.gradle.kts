@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.talkiesocial.domain"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
@@ -12,5 +12,6 @@ android {
 }
 
 dependencies {
+    implementation(libs.javax.inject)
     implementation(libs.androidx.core.ktx)
 }

@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.example.talkiesocial"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.talkiesocial"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(project(":feature:home"))
+    implementation(project(":feature:auth"))
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":core:ui"))

@@ -1,0 +1,25 @@
+# Talkie Social - Project Rules
+
+## 🏗 Architecture & Structure
+- **Multi-module Clean Architecture**: Always place logic in `:domain`, implementation in `:data`, and UI in `:feature:*`.
+- **Dependency Rule**: Modules can only depend on `:domain`, `:core:*`. `:app` depends on everything for DI/Nav.
+- **Navigation**: Use Type-safe Navigation (Compose 2.8+). Routes in `:core:common:navigation`.
+- **DI**: Hilt is mandatory. KSP for processing.
+- **Modern Stack**: Compose, Coroutines/Flow, Retrofit, Room, Coil, Version Catalog (libs.versions.toml).
+
+## 🎨 UI & Design (Strict Design System)
+- **NO HARDCODING**: Never use `Color(0xFF...)` or literal `sp/dp` for styling inside feature modules.
+- **Theme Access**: Always use `MaterialTheme.colorScheme.*` and `MaterialTheme.typography.*`.
+- **Shared Components**: If a UI element is used in >1 place, it MUST be moved to `:core:ui:components`.
+- **Huashu-Design**: Activate Skill for any new UI flow to ensure high-fidelity UX.
+- **Brand Colors**: Use `NeonPurple`, `NeonBlue`, etc., defined in `:core:ui:theme` through the custom `TalkieSocialTheme`.
+
+## ⚡ Token Efficiency
+- Use relative paths for files.
+- Avoid generating boilerplate that exists in other modules.
+- Be concise. Focus on "What" changed and "Why".
+- Use `multi_replace_file_content` for non-contiguous edits to save context.
+
+## 🛠 Tooling
+- Always run `gradle_sync` after modifying `libs.versions.toml` or `build.gradle.kts`.
+- Check `.aiexclude` to ensure sensitive files aren't read.
