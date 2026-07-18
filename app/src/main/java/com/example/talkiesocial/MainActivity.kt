@@ -15,8 +15,8 @@ import com.example.talkiesocial.core.common.navigation.HomeRoute
 import com.example.talkiesocial.core.common.navigation.LoginRoute
 import com.example.talkiesocial.core.common.navigation.RegisterRoute
 import com.example.talkiesocial.core.ui.theme.TalkieSocialTheme
-import com.example.talkiesocial.feature.auth.LoginScreen
-import com.example.talkiesocial.feature.auth.RegisterScreen
+import com.example.talkiesocial.feature.auth.LoginRoute
+import com.example.talkiesocial.feature.auth.RegisterRoute
 import com.example.talkiesocial.feature.home.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<LoginRoute> {
-                            LoginScreen(
+                            LoginRoute(
                                 onLoginSuccess = {
                                     navController.navigate(HomeRoute) {
                                         popUpTo(LoginRoute) { inclusive = true }
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<RegisterRoute> {
-                            RegisterScreen(
+                            RegisterRoute(
                                 onRegisterSuccess = {
                                     navController.navigate(HomeRoute) {
                                         popUpTo(LoginRoute) { inclusive = true }

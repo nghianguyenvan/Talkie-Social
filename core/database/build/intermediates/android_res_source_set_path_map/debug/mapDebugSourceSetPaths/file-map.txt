@@ -1,0 +1,9 @@
+com.example.talkiesocial.core.database-pngs-0 /Users/vannghia/TalkieSocial/core/database/build/generated/res/pngs/debug
+com.example.talkiesocial.core.database-updated_navigation_xml-1 /Users/vannghia/TalkieSocial/core/database/build/generated/updated_navigation_xml/debug
+com.example.talkiesocial.core.database-mergeDebugResources-2 /Users/vannghia/TalkieSocial/core/database/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.talkiesocial.core.database-mergeDebugResources-3 /Users/vannghia/TalkieSocial/core/database/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.example.talkiesocial.core.database-debug-4 /Users/vannghia/TalkieSocial/core/database/build/intermediates/merged_res/debug/mergeDebugResources
+com.example.talkiesocial.core.database-debug-5 /Users/vannghia/TalkieSocial/core/database/build/intermediates/packaged_res/debug/packageDebugResources
+com.example.talkiesocial.core.database-debug-6 /Users/vannghia/TalkieSocial/core/database/src/debug/res
+com.example.talkiesocial.core.database-main-7 /Users/vannghia/TalkieSocial/core/database/src/main/res
+gradleHome-0 /Users/vannghia/.gradle

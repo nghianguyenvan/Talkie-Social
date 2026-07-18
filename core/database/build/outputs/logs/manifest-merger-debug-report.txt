@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml:2:13-83
+INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml:2:13-83
+	package
+		INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml
+	xmlns:android
+		ADDED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml:2:23-81
+uses-sdk
+INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml reason: use-sdk injection requested
+INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml
+INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml
+	android:targetSdkVersion
+		INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml
+	android:minSdkVersion
+		INJECTED from /Users/vannghia/TalkieSocial/core/database/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest17843566309827814082.xml

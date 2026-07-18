@@ -5,36 +5,51 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.talkiesocial.core.common.result.Result
+import com.example.talkiesocial.core.ui.base.BaseScreen
 import com.example.talkiesocial.core.ui.components.TalkieButton
 import com.example.talkiesocial.core.ui.components.TalkieTextField
-import com.example.talkiesocial.core.ui.theme.NeonPurple
+
+@Composable
+fun LoginRoute(
+    onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
+    BaseScreen(
+        viewModel = viewModel,
+        onEffect = { effect ->
+            when (effect) {
+                is AuthEffect.NavigateToHome -> onLoginSuccess()
+                else -> Unit
+            }
+        }
+    ) { state, padding ->
+        LoginScreen(
+            state = state,
+            padding = padding,
+            onEmailChange = viewModel::onEmailChange,
+            onPasswordChange = viewModel::onPasswordChange,
+            onLoginClick = viewModel::login,
+            onNavigateToRegister = onNavigateToRegister
+        )
+    }
+}
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit,
-    viewModel: AuthViewModel = hiltViewModel()
+    state: LoginUiState,
+    padding: PaddingValues,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onNavigateToRegister: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    
-    val loginState by viewModel.loginState.collectAsState()
-
-    LaunchedEffect(loginState) {
-        if (loginState is Result.Success && email.isNotBlank()) {
-            onLoginSuccess()
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(padding)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -56,46 +71,32 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(48.dp))
 
         TalkieTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = state.email,
+            onValueChange = onEmailChange,
             label = "Email",
-            enabled = loginState !is Result.Loading
+            isError = state.emailError != null
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TalkieTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = state.password,
+            onValueChange = onPasswordChange,
             label = "Password",
-            enabled = loginState !is Result.Loading
+            isError = state.passwordError != null
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (loginState is Result.Error) {
-            Text(
-                text = (loginState as Result.Error).exception?.message ?: "Unknown error",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (loginState is Result.Loading) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        } else {
-            TalkieButton(
-                text = "Login",
-                onClick = { viewModel.login(email, password) }
-            )
-        }
+        TalkieButton(
+            text = "Login",
+            onClick = onLoginClick
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
             onClick = onNavigateToRegister,
-            enabled = loginState !is Result.Loading
         ) {
             Text(text = "Don't have an account? Register")
         }

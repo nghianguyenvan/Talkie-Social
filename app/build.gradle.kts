@@ -20,6 +20,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            resValue("string", "app_name", "Talkie Dev")
+            buildConfigField("String", "BASE_URL", "\"https://dev.api.talkie.social/\"")
+        }
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", "Talkie Social")
+            buildConfigField("String", "BASE_URL", "\"https://api.talkie.social/\"")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,6 +48,8 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+        resValues = true
     }
 }
 

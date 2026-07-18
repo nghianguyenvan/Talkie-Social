@@ -1,25 +1,35 @@
-# Talkie Social - Project Rules
+# Talkie Social - Project Rules & Standards
 
-## 🏗 Architecture & Structure
-- **Multi-module Clean Architecture**: Always place logic in `:domain`, implementation in `:data`, and UI in `:feature:*`.
-- **Dependency Rule**: Modules can only depend on `:domain`, `:core:*`. `:app` depends on everything for DI/Nav.
-- **Navigation**: Use Type-safe Navigation (Compose 2.8+). Routes in `:core:common:navigation`.
-- **DI**: Hilt is mandatory. KSP for processing.
-- **Modern Stack**: Compose, Coroutines/Flow, Retrofit, Room, Coil, Version Catalog (libs.versions.toml).
+## 🏗 Architecture & Multi-module
+- **Structure**: Clean Architecture. Logic in `:domain`, Implementation in `:data`, UI in `:feature:*`.
+- **Core Modules**: `:core:common` (Base, Nav, Utils), `:core:ui` (Theme, Components), `:core:network`, `:core:database`.
+- **Navigation**: Type-safe Navigation using `kotlinx.serialization` (Routes defined in `:core:common:navigation`).
+- **DI**: Hilt is mandatory. Use `@Inject` and `@HiltViewModel`.
 
-## 🎨 UI & Design (Strict Design System)
-- **NO HARDCODING**: Never use `Color(0xFF...)` or literal `sp/dp` for styling inside feature modules.
-- **Theme Access**: Always use `MaterialTheme.colorScheme.*` and `MaterialTheme.typography.*`.
-- **Shared Components**: If a UI element is used in >1 place, it MUST be moved to `:core:ui:components`.
-- **Huashu-Design**: Activate Skill for any new UI flow to ensure high-fidelity UX.
-- **Brand Colors**: Use `NeonPurple`, `NeonBlue`, etc., defined in `:core:ui:theme` through the custom `TalkieSocialTheme`.
+## 🔄 State Management (MVI-ish)
+- **Base Components**: Every screen must use `BaseViewModel<State, Effect>` and `BaseScreen`.
+- **UI State**: Always use `_uiState.update { it.copy(...) }` for thread-safe updates. Never assign `.value` directly.
+- **Side Effects**: Use `Effect` (Channel/Flow) for one-time events (Navigation, SnackBar).
+- **Consumption**: Use `collectAsStateWithLifecycle()` in Compose to be lifecycle-aware.
 
-## ⚡ Token Efficiency
-- Use relative paths for files.
-- Avoid generating boilerplate that exists in other modules.
-- Be concise. Focus on "What" changed and "Why".
-- Use `multi_replace_file_content` for non-contiguous edits to save context.
+## 📱 Compose Best Practices
+- **Route vs Screen**: Split every screen into two composables:
+    1. `XRoute`: Handles ViewModel, Side-Effects (onEffect), and connects to Navigation.
+    2. `XScreen`: Pure/Stateless UI. Accepts State and Lambdas. Enables easier `@Preview` and Testing.
+- **Scaffold**: Use `TalkieScaffold` for consistent Loading and Snackbar handling.
+- **Styling**: Strictly use `MaterialTheme.colorScheme` and `MaterialTheme.typography`. No hardcoded colors/sizes.
+- **Components**: Move reusable UI to `:core:ui:components`.
 
-## 🛠 Tooling
-- Always run `gradle_sync` after modifying `libs.versions.toml` or `build.gradle.kts`.
-- Check `.aiexclude` to ensure sensitive files aren't read.
+## 🌐 Network & Auth
+- **API Results**: Use `AppResult<T, BaseError>` and `safeApiCall` for error handling.
+- **Auth**:
+    - **Storage**: Use `AuthManager` (DataStore) in `:core:common`.
+    - **Interceptors**: Use `AuthInterceptor` for automatic token attachment.
+    - **Refresh**: Use `AuthAuthenticator` for 401 handling/token refresh.
+- **Concurrency**: Use `runBlocking` ONLY inside Interceptors/Authenticators when accessing DataStore (Flow to Synchronous).
+
+## ⚡ Developer & AI Guidelines
+- **Efficiency**: Use `multi_replace_file_content` for non-contiguous edits.
+- **Tooling**: Always run `gradle_sync` after modifying `libs.versions.toml` or `build.gradle.kts`.
+- **Preview**: Every `XScreen` (Stateless) should have a `@Preview` with dummy data.
+- **Code Style**: Follow modern Kotlin/Compose standards (Trailing lambdas, named arguments for clarity).
