@@ -6,6 +6,15 @@ import kotlinx.serialization.Serializable
 object HomeRoute
 
 @Serializable
+object ExploreRoute
+
+@Serializable
+object ChatRoute
+
+@Serializable
+object ProfileRoute
+
+@Serializable
 object LoginRoute
 
 @Serializable

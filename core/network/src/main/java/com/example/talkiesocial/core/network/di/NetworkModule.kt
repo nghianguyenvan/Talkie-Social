@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -51,7 +52,7 @@ object NetworkModule {
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
         json: Json,
-        @javax.inject.Named("baseUrl") baseUrl: String
+        @Named("baseUrl") baseUrl: String
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)

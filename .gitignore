@@ -1,15 +1,57 @@
+# Built artifacts
+**/build/
+*.apk
+*.aar
+*.ap_
+*.dex
+*.class
+
+# IDE - IntelliJ / Android Studio
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.ipr
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches
+.idea/navEditor.xml
+
+# Gradle
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.cache
+
+# Local configuration
 local.properties
+.DS_Store
+
+# Log files
+*.log
+
+# Captures
+captures/
+
+# Android Test
+/test-reports/
+
+# NDK
+.externalNativeBuild/
+.cxx/
+*.pyc
+
+# Backup files
+*.bak
+*.swp
+
+# Kotlin
+*.kotlin_module
+
+# Secrets (Supabase, etc)
+# .env
+# secrets.xml

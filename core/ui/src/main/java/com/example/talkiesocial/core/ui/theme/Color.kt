@@ -16,3 +16,8 @@ val OnSurface = Color.White
 val NeonPurple = Color(0xFFBD00FF)
 val NeonBlue = Color(0xFF00D1FF)
 val NeonGreen = Color(0xFF00FF94)
+val NeonPink = Color(0xFFFF007A)
+
+val GlassWhite = Color(0x1AFFFFFF)
+val DarkBackground = Color(0xFF050505)
+val SurfaceDark = Color(0xFF121212)

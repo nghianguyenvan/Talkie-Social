@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talkie Social - Login & Register Prototype</title>
+    <style>
+        :root {
+            --primary: #BB86FC;
+            --primary-variant: #BD00FF;
+            --secondary: #03DAC6;
+            --background: #121212;
+            --surface: #1E1E1E;
+            --on-background: #FFFFFF;
+            --neon-blue: #00D1FF;
+            --neon-green: #00FF94;
+            --radius: 12px;
+            --glow: 0 0 15px rgba(187, 134, 252, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--on-background);
+            overflow: hidden;
+        }
+
+        /* Mobile Container Mockup */
+        .device-frame {
+            width: 375px;
+            height: 812px;
+            background: var(--background);
+            border-radius: 40px;
+            border: 8px solid #222;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Abstract Illustration Background */
+        .illustration-header {
+            height: 40%;
+            width: 100%;
+            position: relative;
+            background: linear-gradient(45deg, #121212, #1e1e1e);
+            overflow: hidden;
+        }
+
+        .illustration-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            filter: saturate(1.5) hue-rotate(-10deg);
+        }
+
+        .overlay-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, var(--background), transparent);
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .logo-glow {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: black;
+            box-shadow: 0 0 30px var(--primary-variant);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px var(--primary-variant); transform: translate(-50%, -50%) scale(1); }
+            50% { box-shadow: 0 0 40px var(--primary-variant); transform: translate(-50%, -50%) scale(1.05); }
+            100% { box-shadow: 0 0 20px var(--primary-variant); transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Form Area */
+        .content-area {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid #333;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            background: #252525;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary-variant), var(--neon-blue));
+            border: none;
+            border-radius: var(--radius);
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 12px;
+            box-shadow: 0 4px 15px rgba(189, 0, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(189, 0, 255, 0.5);
+        }
+
+        .footer-links {
+            margin-top: auto;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            padding-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Onboarding Styles */
+        #onboarding-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            z-index: 10;
+            background: var(--background);
+        }
+
+        .slide-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .slide { display: none; animation: fadeIn 0.5s ease-out; }
+        .slide.active { display: block; }
+
+        .slide-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Loading & Error */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-text {
+            color: #ff4d4d;
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hidden by default */
+        .hidden { display: none !important; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--background); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="device-frame">
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Onboarding Screen -->
+        <div id="onboarding-screen">
+            <div class="slide-container">
+                <div class="slide active" id="slide-1">
+                    <div class="slide-icon">🧠</div>
+                    <h1>AI Soul</h1>
+                    <p class="subtitle">Meet AI characters that feel alive and remember your pulses.</p>
+                </div>
+                <div class="slide" id="slide-2">
+                    <div class="slide-icon">⚡</div>
+                    <h1>Electric Pulse</h1>
+                    <p class="subtitle">Connect with a community that vibrates with creative energy.</p>
+                </div>
+                <div class="slide" id="slide-3">
+                    <div class="slide-icon">🌐</div>
+                    <h1>Digital World</h1>
+                    <p class="subtitle">Build your own universe and share it with the world.</p>
+                </div>
+            </div>
+            <div class="dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div style="padding: 0 32px 48px;">
+                <button class="btn-primary" id="next-btn" onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+
+        <!-- Form Header (Hidden initially) -->
+        <div id="form-header" class="illustration-header hidden">
+            <img src="https://images.unsplash.com/photo-1614728263952-84ea206f99b6?q=80&w=1000&auto=format&fit=crop" class="illustration-image" alt="Cyber Illustration">
+            <div class="overlay-gradient"></div>
+            <div class="logo-container">
+                <div class="logo-glow">t</div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="content-area hidden">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Enter your pulse to connect.</p>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="name@pulse.com">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••">
+            </div>
+
+            <button class="btn-primary">Sign In</button>
+
+            <div class="footer-links">
+                Don't have an account? <a href="#" onclick="showForm('register')">Join the Pulse</a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="content-area">
+            <h1>Join Talkie</h1>
+            <p class="subtitle">Create your digital avatar.</p>
+
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" placeholder="cyber_punk_2025">
+            </div>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="name@pulse.com">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••">
+            </div>
+
+            <button class="btn-primary" style="background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));">Create Account</button>
+
+            <div class="footer-links">
+                Already a member? <a href="#" onclick="showForm('login')">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+
+        function nextSlide() {
+            if (currentSlide < 3) {
+                document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+                document.querySelectorAll('.dot')[currentSlide-1].classList.remove('active');
+                currentSlide++;
+                document.getElementById(`slide-${currentSlide}`).classList.add('active');
+                document.querySelectorAll('.dot')[currentSlide-1].classList.add('active');
+
+                if (currentSlide === 3) {
+                    document.getElementById('next-btn').innerText = 'Get Started';
+                }
+            } else {
+                startApp();
+            }
+        }
+
+        function startApp() {
+            document.getElementById('onboarding-screen').classList.add('hidden');
+            document.getElementById('form-header').classList.remove('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function showForm(type) {
+            const login = document.getElementById('login-form');
+            const register = document.getElementById('register-form');
+
+            if (type === 'register') {
+                login.style.display = 'none';
+                register.style.display = 'flex';
+                register.classList.remove('hidden');
+            } else {
+                register.style.display = 'none';
+                login.style.display = 'flex';
+                login.classList.remove('hidden');
+            }
+        }
+
+        // Simulate Login Loading
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.id === 'next-btn') return;
+
+                const loading = document.getElementById('loading');
+                loading.style.display = 'flex';
+
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    alert('Demo: Connection Successful!');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

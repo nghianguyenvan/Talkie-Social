@@ -20,6 +20,10 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:common"))
     
+    // Supabase (needed for Auth references)
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
+    
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.hilt.android)

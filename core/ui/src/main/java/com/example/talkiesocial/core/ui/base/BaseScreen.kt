@@ -19,6 +19,7 @@ fun <S, E> BaseScreen(
     onEffect: (E) -> Unit = {},
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
     content: @Composable (S, PaddingValues) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -40,7 +41,8 @@ fun <S, E> BaseScreen(
         isLoading = isLoading,
         snackbarHostState = snackbarHostState,
         topBar = topBar,
-        bottomBar = bottomBar
+        bottomBar = bottomBar,
+        floatingActionButton = floatingActionButton
     ) { paddingValues ->
         content(uiState, paddingValues)
     }

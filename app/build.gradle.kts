@@ -28,11 +28,16 @@ android {
             versionNameSuffix = "-dev"
             resValue("string", "app_name", "Talkie Dev")
             buildConfigField("String", "BASE_URL", "\"https://dev.api.talkie.social/\"")
+            buildConfigField("String", "SUPABASE_URL", "\"https://dbfegcyoiwnevmrybcmt.supabase.co\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"sb_publishable_aWC8jplYMcWJ9aV93pHncw_jN8Cnxfr\"")
+
         }
         create("prod") {
             dimension = "environment"
             resValue("string", "app_name", "Talkie Social")
             buildConfigField("String", "BASE_URL", "\"https://api.talkie.social/\"")
+            buildConfigField("String", "SUPABASE_URL", "\"https://dbfegcyoiwnevmrybcmt.supabase.co\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"sb_publishable_aWC8jplYMcWJ9aV93pHncw_jN8Cnxfr\"")
         }
     }
 

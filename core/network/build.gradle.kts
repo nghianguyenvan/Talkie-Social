@@ -11,6 +11,8 @@ android {
 
     defaultConfig {
         minSdk = 24
+        buildConfigField("String", "SUPABASE_URL", "\"https://dbfegcyoiwnevmrybcmt.supabase.co\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"sb_publishable_aWC8jplYMcWJ9aV93pHncw_jN8Cnxfr\"")
     }
 
     buildFeatures {
@@ -24,6 +26,13 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    
+    // Supabase
+    implementation(libs.supabase.postgrest)
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.realtime)
+    implementation(libs.supabase.storage)
+    implementation(libs.ktor.client.okhttp)
     
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

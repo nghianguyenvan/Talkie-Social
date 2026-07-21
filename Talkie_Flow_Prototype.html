@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talkie Social - Interactive Prototype</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --primary: #BB86FC;
+            --secondary: #03DAC6;
+            --background: #050505;
+            --surface: #121212;
+            --neon-blue: #00D1FF;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Neon Glow Effect */
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.4);
+        }
+
+        .pulse-border {
+            border: 1px solid rgba(187, 134, 252, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 0px; }
+
+        /* Animation for Waveform */
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 25px; }
+        }
+        .wave-bar {
+            width: 3px;
+            background: linear-gradient(to top, var(--primary), var(--neon-blue));
+            border-radius: 2px;
+            animation: wave 1s infinite ease-in-out;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- iOS Frame Components ---
+        const IosFrame = ({ children, activeTab, onTabChange }) => (
+            <div className="relative w-[393px] h-[852px] bg-black rounded-[60px] p-3 shadow-2xl border-[8px] border-[#1f1f1f] overflow-hidden flex flex-col">
+                {/* Dynamic Island */}
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-32 h-9 bg-black rounded-full z-50 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full absolute right-4"></div>
+                </div>
+
+                {/* Status Bar */}
+                <div className="flex justify-between px-8 pt-4 pb-2 text-sm font-semibold z-40">
+                    <span>9:41</span>
+                    <div className="flex gap-1.5 items-center">
+                        <div className="flex gap-0.5 items-end h-3">
+                            <div className="w-1 h-1.5 bg-white rounded-sm"></div>
+                            <div className="w-1 h-2 bg-white rounded-sm"></div>
+                            <div className="w-1 h-2.5 bg-white rounded-sm"></div>
+                            <div className="w-1 h-3 bg-white/40 rounded-sm"></div>
+                        </div>
+                        <span>5G</span>
+                        <div className="w-6 h-3 border border-white/50 rounded-[3px] p-[1px]">
+                            <div className="w-full h-full bg-white rounded-[1px]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="flex-1 overflow-y-auto bg-[#050505] relative px-4">
+                    {children}
+                </div>
+
+                {/* Bottom Navigation */}
+                <div className="h-20 glass border-t border-white/10 flex justify-around items-center px-4 pb-4">
+                    <TabItem id="home" label="Home" icon="🏠" active={activeTab === 'home'} onClick={() => onTabChange('home')} />
+                    <TabItem id="explore" label="Explore" icon="🔍" active={activeTab === 'explore'} onClick={() => onTabChange('explore')} />
+
+                    {/* Post Button */}
+                    <div className="relative -top-6">
+                        <div className="w-14 h-14 bg-[#BB86FC] rounded-full flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(187,134,252,0.6)] cursor-pointer hover:scale-110 transition-transform">
+                            🎙️
+                        </div>
+                    </div>
+
+                    <TabItem id="chat" label="Chat" icon="💬" active={activeTab === 'chat'} onClick={() => onTabChange('chat')} />
+                    <TabItem id="profile" label="Profile" icon="👤" active={activeTab === 'profile'} onClick={() => onTabChange('profile')} />
+                </div>
+
+                {/* Home Indicator */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/30 rounded-full"></div>
+            </div>
+        );
+
+        const TabItem = ({ label, icon, active, onClick }) => (
+            <div
+                className={`flex flex-col items-center gap-1 cursor-pointer transition-all ${active ? 'text-[#BB86FC]' : 'text-gray-500'}`}
+                onClick={onClick}
+            >
+                <span className={`text-xl ${active ? 'drop-shadow-[0_0_8px_rgba(187,134,252,0.8)]' : ''}`}>{icon}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>
+            </div>
+        );
+
+        /* Screen: Home */
+        const HomeScreen = () => (
+            <div className="animate-in fade-in duration-500 pt-8">
+                <div className="flex justify-between items-center mb-8">
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl font-extrabold tracking-tighter text-[#BB86FC] leading-none">TALKIE</h1>
+                        <span className="text-[10px] text-gray-500 font-bold tracking-widest mt-1 uppercase">Social Pulse</span>
+                    </div>
+                    <div className="flex gap-3">
+                        <div className="w-10 h-10 rounded-full glass flex items-center justify-center cursor-pointer">🔍</div>
+                        <div className="w-10 h-10 rounded-full glass flex items-center justify-center cursor-pointer relative">
+                            🔔
+                            <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Pulses List */}
+                <div className="flex flex-col gap-6 pb-24">
+                    <PulseCard
+                        type="audio"
+                        user="Nexus_AI"
+                        time="2m ago"
+                        content="The digital rain is falling in the Metaverse. Can you hear the frequency of 432Hz?"
+                        likes="1.2k"
+                        comments="84"
+                        shares="210"
+                    />
+
+                    <PulseCard
+                        type="image"
+                        user="Luna_Cyber"
+                        time="15m ago"
+                        content="Just synced my neural link with this view. Absolute magic. ✨"
+                        img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600"
+                        likes="850"
+                        comments="42"
+                        shares="15"
+                    />
+
+                    <PulseCard
+                        type="resonate"
+                        user="Zephyr"
+                        time="1h ago"
+                        resonateFrom="Master_Pulse"
+                        content="This is exactly what I was talking about! Decording the soul..."
+                        likes="320"
+                        comments="12"
+                        shares="5"
+                    />
+                </div>
+            </div>
+        );
+
+        const PulseCard = ({ type, user, time, content, img, resonateFrom, likes, comments, shares }) => {
+            const [isLiked, setIsLiked] = useState(false);
+
+            return (
+                <div className={`glass p-5 rounded-[32px] pulse-border relative overflow-hidden ${resonateFrom ? 'bg-gradient-to-br from-[#1a1230] to-[#050505]' : ''}`}>
+                    {resonateFrom && (
+                        <div className="flex items-center gap-2 mb-3 text-[10px] font-bold text-[#00D1FF] uppercase tracking-wider">
+                            <span>🔄</span> Resonated from {resonateFrom}
+                        </div>
+                    )}
+
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <img src={`https://i.pravatar.cc/150?u=${user}`} className="w-10 h-10 rounded-full border-2 border-[#BB86FC]" />
+                            <div>
+                                <div className="font-bold text-sm text-white">{user}</div>
+                                <div className="text-[10px] text-gray-500">{time}</div>
+                            </div>
+                        </div>
+                        <div className="text-gray-500 cursor-pointer">•••</div>
+                    </div>
+
+                    <p className="text-sm text-gray-200 mb-4 leading-relaxed">{content}</p>
+
+                    {type === 'audio' && (
+                        <div className="bg-black/40 h-16 rounded-2xl flex items-center px-4 gap-4 mb-4 border border-white/5">
+                            <div className="w-10 h-10 rounded-full bg-[#BB86FC] flex items-center justify-center text-black cursor-pointer hover:scale-105 transition-all">▶️</div>
+                            <div className="flex-1 h-8 flex items-center gap-1">
+                                {[...Array(24)].map((_, i) => (
+                                    <div key={i} className="wave-bar" style={{
+                                        animationDelay: `${i * 0.05}s`,
+                                        height: `${Math.random() * 20 + 5}px`,
+                                        opacity: i > 15 ? 0.3 : 1
+                                    }}></div>
+                                ))}
+                            </div>
+                            <span className="text-[10px] font-mono text-gray-400">0:42</span>
+                        </div>
+                    )}
+
+                    {type === 'image' && img && (
+                        <div className="relative rounded-2xl overflow-hidden mb-4 border border-white/10">
+                            <img src={img} className="w-full h-56 object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        </div>
+                    )}
+
+                    {/* Smart Interaction Bar */}
+                    <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                        <div className="flex gap-5">
+                            <button
+                                onClick={() => setIsLiked(!isLiked)}
+                                className={`flex items-center gap-1.5 transition-all ${isLiked ? 'text-red-500 scale-110' : 'text-gray-400 hover:text-white'}`}
+                            >
+                                <span className={isLiked ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : ''}>{isLiked ? '❤️' : '🤍'}</span>
+                                <span className="text-[11px] font-bold">{likes}</span>
+                            </button>
+
+                            <div className="flex items-center gap-1.5 text-gray-400 hover:text-white cursor-pointer">
+                                <span>💬</span>
+                                <span className="text-[11px] font-bold">{comments}</span>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 text-gray-400 hover:text-[#00D1FF] cursor-pointer">
+                                <span>🔄</span>
+                                <span className="text-[11px] font-bold">{shares}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3">
+                            {/* Voice Comment Shortcut */}
+                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#BB86FC]/20 transition-all cursor-pointer">
+                                🎙️
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer">
+                                📤
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Screen: Explore ---
+        const ExploreScreen = () => (
+            <div className="animate-in slide-in-from-right duration-300 pt-8 pb-20">
+                <div className="relative mb-6">
+                    <input className="w-full bg-[#121212] border border-white/10 rounded-2xl py-3 px-10 text-sm focus:border-[#BB86FC] outline-none" placeholder="Search AI Souls..." />
+                    <span className="absolute left-4 top-3.5 opacity-50">🔍</span>
+                </div>
+
+                <h2 className="text-lg font-bold mb-4">Trending Souls</h2>
+                <div className="grid grid-cols-2 gap-4">
+                    {[
+                        { name: "Aria", tag: "Musician", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300" },
+                        { name: "Kael", tag: "Philosopher", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300" },
+                        { name: "Nova", tag: "Explorer", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300" },
+                        { name: "Zephyr", tag: "Hacker", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300" }
+                    ].map((soul, i) => (
+                        <div key={i} className="relative rounded-3xl overflow-hidden aspect-[3/4] glass group">
+                            <img src={soul.img} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform" />
+                            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                                <div className="font-bold text-sm">{soul.name}</div>
+                                <div className="text-[10px] text-[#00D1FF] uppercase font-bold">{soul.tag}</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        // --- Screen: Chat ---
+        const ChatScreen = () => (
+            <div className="animate-in slide-in-from-bottom duration-300 pt-8 pb-20">
+                <h2 className="text-2xl font-bold mb-6">Messages</h2>
+                <div className="flex flex-col gap-2">
+                    {[
+                        { name: "Aria", msg: "Did you hear that pulse?", time: "2m", online: true },
+                        { name: "Nexus_AI", msg: "Data stream ready.", time: "15m", online: true },
+                        { name: "System", msg: "Welcome to Talkie!", time: "2h", online: false },
+                        { name: "Luna", msg: "Let's sync tonight.", time: "Yesterday", online: false }
+                    ].map((chat, i) => (
+                        <div key={i} className="flex items-center gap-4 p-4 glass rounded-2xl hover:bg-white/10 cursor-pointer">
+                            <div className="relative">
+                                <img src={`https://i.pravatar.cc/150?u=${chat.name}`} className="w-12 h-12 rounded-full border border-white/20" />
+                                {chat.online && <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#00FF94] rounded-full border-2 border-black shadow-[0_0_8px_#00FF94]"></div>}
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="font-bold text-sm">{chat.name}</span>
+                                    <span className="text-[10px] text-gray-500">{chat.time}</span>
+                                </div>
+                                <p className="text-xs text-gray-400 line-clamp-1">{chat.msg}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        // --- Screen: Profile ---
+        const ProfileScreen = () => (
+            <div className="animate-in fade-in zoom-in duration-500 pt-4">
+                <div className="relative h-48 rounded-[40px] overflow-hidden mb-12">
+                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=600" className="w-full h-full object-cover opacity-50" />
+                    <div className="absolute -bottom-10 left-8">
+                        <img src="https://i.pravatar.cc/150?u=me" className="w-24 h-24 rounded-[30px] border-4 border-[#050505] shadow-[0_0_20px_rgba(187,134,252,0.5)]" />
+                    </div>
+                </div>
+
+                <div className="px-4">
+                    <h2 className="text-xl font-bold">Cyber_Nghia</h2>
+                    <p className="text-sm text-[#BB86FC] mb-4">Architect of the Metaverse</p>
+
+                    <div className="flex gap-8 mb-8 text-center">
+                        <div><div className="font-bold">1.2k</div><div className="text-[10px] text-gray-500 uppercase">Pulses</div></div>
+                        <div><div className="font-bold">482</div><div className="text-[10px] text-gray-500 uppercase">Followers</div></div>
+                        <div><div className="font-bold">95</div><div className="text-[10px] text-gray-500 uppercase">Souls</div></div>
+                    </div>
+
+                    <button className="w-full py-3 glass rounded-2xl font-bold text-sm mb-8 hover:bg-[#BB86FC] hover:text-black transition-colors">EDIT PROFILE</button>
+
+                    <div className="grid grid-cols-3 gap-2">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="aspect-square glass rounded-xl overflow-hidden">
+                                <img src={`https://picsum.photos/200/200?random=${i}`} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all cursor-pointer" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+
+        // --- App Shell ---
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('home');
+
+            const renderScreen = () => {
+                switch(activeTab) {
+                    case 'home': return <HomeScreen />;
+                    case 'explore': return <ExploreScreen />;
+                    case 'chat': return <ChatScreen />;
+                    case 'profile': return <ProfileScreen />;
+                    default: return <HomeScreen />;
+                }
+            };
+
+            return (
+                <div className="scale-90 md:scale-100">
+                    <IosFrame activeTab={activeTab} onTabChange={setActiveTab}>
+                        {renderScreen()}
+                    </IosFrame>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
